@@ -11,6 +11,26 @@ from datetime import timedelta
 
 
 
+def check_user(user_id):
+	user = middleware_base.get_one(models.User, user_id=str(user_id))
+	if user != None:
+		return user
+	else:
+		return False
+
+
+def create_draw_progress(user_id, tmp):
+	middleware_base.delete(models.DrawProgress, user_id=(str(user_id)))
+	middleware_base.new(models.DrawProgress, str(user_id), tmp['chanel_id'], tmp['chanel_name'], tmp['draw_text'], tmp['file_type'], tmp['file_id'], int(tmp['winers_count']), tmp['start_time'], tmp['end_time'])
+	middleware_base.delete(models.State, user_id=str(user_id))
+
+	return draw_info(user_id)
+
+
+
+
+
+
 def draw_info(user_id):
 	tmp = check_post(str(user_id))
 	text = language_check(user_id)[1]['draw']
