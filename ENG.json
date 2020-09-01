@@ -1,0 +1,77 @@
+{
+  "menu": {
+         "welcome_text": "👋Hi!\n The God of random will help you create a giveaway on the channel.\n Are you ready to create a new giveaway?",
+         "menu_buttons": ["Create giveaway 🎁", "My giveaways 🎉", "Сменить язык 🇷🇺", "Support ⁉️", "Share with a friends 👥"],
+         "invite": "Share the bot with your friends by sending them the bot username \n @RandomGodBot",
+         "support": "t.me/FeedbackRandomGodBot"
+        },
+  "draw": {
+         
+         "back_in_menu": "Back in menu ↩️",
+         "back": "Back ↩️",
+         "draw_buttons": ["Change start time ⏳", "Change end time ⌛️", "Change number of winners 🏆", "Change discription 📑", "Change photo/gif 🖼", "Сheck subscription ✅", "Publish 🎲", "Back in menu ↩️"],
+
+         "chanel_id":"Enter the username of the channel where the giveaway will be published in @username format.  You must be the administrator of this channel and add bot to the administrators.\n If the channel is private, then you need to send the id of this channel to find out the id of the private channel, forward any post from this channel to the special bot @getmyid_bot, the bottom line is the response from the bot and will be the id of your private channel.  Forward this id to the bot",
+         "chanel_id_check": "Enter the username of the channel for verification in @username format.\n \n If the channel is private, then you need to send the id of this channel to find out the id of the private channel, forward any post from this channel to the special bot @getmyid_bot, the bottom line is the response from the bot and will be the id of your private channel.  Forward this id to the bot.\n Indicate the link to this channel in the description so that the participants of the giveaway know which channels you need to subscribe",
+         "not_admin":"For publish the giveaway, you must be the administrator of this channel.  Send username as administrator",
+         "not_in_chanel":"The bot is not the administrator of this channel.  Add bot to admins and submit @username again",
+         
+         "draw_text":"Enter a description of the giveaway. \n Tip: describe what the prizes will be, how many winners there will be and what each of them will win, which channels the participants need to subscribe to, and indicate the date and time of the end of the giveaway.\n You can use the html markup.\n 1)Bold text - <b>your text</b>\n 2)Italic text - <i>your text</i>\n 3)Hyperlink to channel - <a href='your channel link'>your text</a>.\n Link must be in this format: https://t.me/channel",
+         "file":"Send a picture or GIF (optional, if not needed, send any other message)",
+         
+         "winers_count":"Enter the number of winners",
+         "not_int": "This is not a number",
+
+         "post_time":"Enter the date and time of the start of the giveaway in the format: (year-month-day hours: minutes), for example 2020-10-25 21:05",
+         "end_time":"Enter the date and time of the end of the giveaway in the format: (year-month-day hours: minutes), for example 2020-10-31 21:55",
+         "over_time": "This time has already expired, enter the time that will be greater than the current moment",
+         "invalid_format_time": "Invalid time format, enter the time in the format: (year-month-day hours: minutes), for example 2020-08-25 21:00",
+         "post_biger": "Posting time is longer, enter the time in the format: (year-month-day hours: minutes), for example 2020-08-26 21:41",
+
+         "get_on":"Participate",
+
+         "change_text": "What do you need to change in the giveaway?",
+         "chanel/chat": "Channel/chat:",
+         "text": "Discription:",
+         "count_text":"Number of winners:",
+         "post_time_text":"Start time:",
+         "over_time_text":"End time:",
+
+         "submit_text":"The giveaway has been created and will be published on the channel at the selected time",
+
+
+         "play":"Participate",
+         "not_subscribe": "@RandomGodBot: You haven't subscribed to all channels, please read the giveaway discription carefully and subscribe to all necessary channels to participate",
+         "already_in":"@RandomGodBot: You've already taken part",
+         "got_on":"@RandomGodBot: Congratulations, you entered the giveaway!",
+
+         "winers":"The giveaway has ended.\n Winners:",
+         "no_winers":"No winners",
+
+         "failed_post": "Failed to send the giveaway because the channel was deleted",
+         "your_draw_over": "Your giveaway is over"
+        },
+
+  "my_draw":{
+         "no_draw": "You have no active giveaways",
+         "last":"Last",
+         "first":"Next",
+         "your_draw":"Your giveaway:",
+         "chanel/chat": "Channel/chat:",
+           "text": "Discription:",
+           "count_text":"Number of winners:",
+           "post_time_text":"Time of start:",
+           "over_time_text":"Time of end:",
+
+           "next":"Next",
+           "back":"Back"
+
+        },
+
+    "send_id_username": "Отправь юзернейм и id победителя в формате: @tester 1233",
+    "winer_added": "Победитель добавлен",
+    "already_exist": "Этот пользователь уже в победителях"
+
+    
+
+}
