@@ -1,10 +1,8 @@
-import config
 import middleware
 import telebot
 import models
 import time
 from datetime import datetime
-from datetime import timedelta
 from middleware import keyboard
 from app import fsm, bot
 from app import main_base as base
@@ -110,7 +108,7 @@ def next(call):
 		tmp = middleware.my_draw_info(call.message.chat.id, row=number)
 		if tmp == 'last':
 			bot.answer_callback_query(callback_query_id=call.id, show_alert=False,  text=text['last'])
-			return 
+			return
 		bot.delete_message(call.message.chat.id, call.message.message_id)
 		fsm.set_state(call.message.chat.id, 'my_draws', number=number)
 	except:
@@ -127,7 +125,7 @@ def back(call):
 		tmp = middleware.my_draw_info(call.message.chat.id, row=number)
 		if tmp == 'first':
 			bot.answer_callback_query(callback_query_id=call.id, show_alert=False,  text=text['first'])
-			return 
+			return
 
 		bot.delete_message(call.message.chat.id, call.message.message_id)
 		fsm.set_state(call.message.chat.id, 'my_draws', number=number)
@@ -138,7 +136,7 @@ def back(call):
 
 
 
-	
+
 ############################################ draw func #################################################
 # -------------------------------------- # submit # -------------------------------------- #
 @bot.message_handler(func=lambda message: True and middleware.check_post(message.chat.id) != None and message.text == language_check(message.chat.id)[1]['draw']['draw_buttons'][-2])
@@ -170,7 +168,7 @@ def enter_text(message):
 	text = language_check(str(message.chat.id))[1]['draw']
 	back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 	back_button.row(text['back_in_menu'])
-	
+
 	try:
 		if str(bot.get_chat_member(chat_id=message.text, user_id=message.from_user.id).status) not in status:
 			bot.send_message(text['not_admin'], reply_markup=back_button)
@@ -213,7 +211,7 @@ def enter_photo(message):
 	else:
 		file_id = ''
 		file_type = 'text'
-	
+
 	fsm.set_state(message.chat.id, "enter_winers_count", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'], file_type=file_type, file_id=file_id)
 	bot.send_message(message.chat.id, text['winers_count'], reply_markup=back_button)
 
@@ -227,13 +225,13 @@ def enter_winers_count(message):
 	except:
 		bot.send_message(message.chat.id, text['not_int'])
 		return 'gg'
-	
+
 	back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 	back_button.row(text['back_in_menu'])
 	tmp = fsm.get_state(message.chat.id)[1]
-	fsm.set_state(message.chat.id, "enter_start_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'], 
+	fsm.set_state(message.chat.id, "enter_start_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'],
 				  file_type=tmp['file_type'], file_id=tmp['file_id'], winers_count=message.text)
-	
+
 	bot.send_message(message.chat.id, text['post_time'], reply_markup=back_button)
 
 
@@ -251,15 +249,15 @@ def enter_start_time(message):
 	if time.strptime(datetime.now().strftime('%Y-%m-%d %H:%M'), '%Y-%m-%d %H:%M') >= time.strptime(message.text, '%Y-%m-%d %H:%M'):
 		bot.send_message(message.chat.id, text['over_time'])
 		return 'gg'
-	
+
 
 	back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 	back_button.row(text['back_in_menu'])
-	
+
 	tmp = fsm.get_state(message.chat.id)[1]
-	fsm.set_state(message.chat.id, "enter_end_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'], 
+	fsm.set_state(message.chat.id, "enter_end_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'],
 				  file_type=tmp['file_type'], file_id=tmp['file_id'], winers_count=tmp['winers_count'], start_time=message.text)
-	
+
 	bot.send_message(message.chat.id, text['end_time'], reply_markup=back_button)
 
 
@@ -267,12 +265,12 @@ def enter_start_time(message):
 @bot.message_handler(func=lambda message: True and fsm.get_state(message.chat.id)[0] == 'enter_end_time')
 def enter_end_time(message):
 	text = language_check(str(message.chat.id))[1]['draw']
-	try:																	
+	try:
 		print(time.strptime(message.text, '%Y-%m-%d %H:%M'))
 	except:
 		bot.send_message(message.chat.id, text['invalid_format_time'])
 		return 'gg'
-	
+
 	tmp = fsm.get_state(message.chat.id)[1]
 	if time.strptime(tmp['start_time'], '%Y-%m-%d %H:%M') >= time.strptime(message.text, '%Y-%m-%d %H:%M'):
 		bot.send_message(message.chat.id, text['post_biger'])
@@ -284,7 +282,7 @@ def enter_end_time(message):
 
 	back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 	back_button.row(text['back_in_menu'])
-	fsm.set_state(message.chat.id, "enter_end_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'], file_type=tmp['file_type'], 
+	fsm.set_state(message.chat.id, "enter_end_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'], file_type=tmp['file_type'],
 				  file_id=tmp['file_id'], winers_count=tmp['winers_count'], start_time=tmp['start_time'], end_time=message.text)
 	tmp = fsm.get_state(message.chat.id)[1]
 	if tmp['file_type'] == 'photo':
@@ -336,7 +334,7 @@ def change_end_time(message):
 @bot.message_handler(func=lambda message: True and fsm.get_state(message.chat.id)[0] == 'change_end_time')
 def confirm_change_end_time(message):
 	text = language_check(str(message.chat.id))[1]['draw']
-	try:																
+	try:
 		print(time.strptime(message.text, '%Y-%m-%d %H:%M'))
 	except:
 		bot.send_message(message.chat.id, text['invalid_format_time'])
@@ -370,7 +368,7 @@ def confirm_change_wines_count(message):
 	except:
 		bot.send_message(message.chat.id, language_check(message.chat.id)[1]['draw']['not_int'])
 		return 'gg'
-	
+
 	base.update(models.DrawProgress, {'winers_count': message.text}, user_id=str(message.chat.id))
 	middleware.send_draw_info(message.chat.id)
 

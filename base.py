@@ -1,9 +1,6 @@
 from models import session
 from models import Base as BaseObj
 from models import engine as BaseEngine
-from sqlalchemy import select
-
-
 
 
 class DataBase:
@@ -28,12 +25,12 @@ class DataBase:
 			return False
 
 
-	def new(self,Model,*args):	
+	def new(self,Model,*args):
 		tmp_new = Model(*args)
 		session.add(tmp_new)
 		session.commit()
 		return tmp_new
-		
+
 
 	def delete(self,Model,**filter_s):
 		obj = self.select_all(Model,**filter_s)
@@ -62,7 +59,7 @@ class DataBase:
 
 
 	def base_init(self):
-		BaseObj.metadata.create_all(BaseEngine)		
+		BaseObj.metadata.create_all(BaseEngine)
 
 
 

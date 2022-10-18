@@ -1,6 +1,5 @@
-import json
 import telebot
-from tool import language_check, create_inlineKeyboard
+from tool import language_check
 
 def get_menu_keyboard(user_id):
 	buttons = language_check(user_id)[1]['menu']['menu_buttons']
@@ -10,7 +9,7 @@ def get_menu_keyboard(user_id):
 	menu_keyboard.row(buttons[3], buttons[4])
 	return menu_keyboard
 
-	
+
 def get_draw_keyboard(user_id):
 	buttons = language_check(user_id)[1]['draw']['draw_buttons']
 	draw_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -19,7 +18,7 @@ def get_draw_keyboard(user_id):
 	draw_keyboard.row(buttons[4], buttons[5])
 	draw_keyboard.row(buttons[6], buttons[7])
 	return draw_keyboard
-	
+
 
 def back_button(user_id):
 	buttons = language_check(user_id)[1]['draw']['back']

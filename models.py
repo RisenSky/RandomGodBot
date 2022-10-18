@@ -1,16 +1,16 @@
-import config
-import time
-from sqlalchemy import Table,MetaData,Column,Integer,String,ForeignKey,Binary,Boolean
-from sqlalchemy.orm import mapper
+import os
+
+from sqlalchemy import Column,Integer,String,Binary
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 
-# ---INIT---
-engine = create_engine(config.db_url, echo=False)
+
+engine = create_engine(f"postgres//{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@db:5432/{os.getenv('POSTGRES_DB')}?sslmode=require", echo=False)
 session = scoped_session(sessionmaker(bind=engine,autoflush=False))
 Base = declarative_base()
+
 
 class User(Base):
 	__tablename__ = 'bot_user'
