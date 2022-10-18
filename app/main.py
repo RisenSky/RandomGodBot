@@ -437,14 +437,5 @@ def add_check_channel(message):
 	print(base.select_all(models.SubscribeChannel))
 
 
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
 	bot.polling(none_stop=True)

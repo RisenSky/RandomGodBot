@@ -4,7 +4,7 @@ import random
 import threading
 import keyboard
 from tool import language_check, create_inlineKeyboard
-from app import middleware_base, bot, post_base, end_base 
+from app import middleware_base, bot, post_base, end_base
 from datetime import datetime
 from datetime import timedelta
 
@@ -87,7 +87,7 @@ def start_draw_timer():
 	def timer():
 		while 1:
 			for i in post_base.select_all(models.DrawNot):
-				
+
 				count = 0
 				post_time = datetime.now().strftime('%Y-%m-%d %H:%M')
 				post_time = time.strptime(post_time, '%Y-%m-%d %H:%M')
@@ -148,7 +148,7 @@ def new_player(call):
 	tmp = middleware_base.get_one(models.Draw, id=id)
 	chanel = middleware_base.select_all(models.SubscribeChannel, draw_id=tmp.id)
 	status = ['left', 'kicked', 'restricted', 'member', 'admini', 'creator']
-	for i in chanel:	
+	for i in chanel:
 		if bot.get_chat_member(chat_id=i.channel_id, user_id=call.from_user.id).status in status:
 			return ('not_subscribe')
 
