@@ -18,4 +18,4 @@ services:
     restart: unless-stopped
     volumes:
       - ./app:/app
-    entrypoint: bash -c "cd app && pip install -r requirements.txt && python app.py"
+    entrypoint: bash -c "cd app && pip install -r requirements.txt && python main.py"

@@ -7,7 +7,10 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 
 
-engine = create_engine(f"postgres://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@db:5432/{os.getenv('POSTGRES_DB')}", echo=False)
+LINK = f"postgres://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@db:5432/{os.getenv('POSTGRES_DB')}"
+
+
+engine = create_engine(LINK, echo=False)
 session = scoped_session(sessionmaker(bind=engine,autoflush=False))
 Base = declarative_base()
 

@@ -1,3 +1,4 @@
+import os
 import time
 import models
 import random
@@ -87,11 +88,9 @@ def start_draw_timer():
 	def timer():
 		while 1:
 			for i in post_base.select_all(models.DrawNot):
-
 				count = 0
-				post_time = datetime.now().strftime('%Y-%m-%d %H:%M')
-				post_time = time.strptime(post_time, '%Y-%m-%d %H:%M')
-				if post_time >= time.strptime(i.post_time, '%Y-%m-%d %H:%M'):
+				post_time = datetime.now() + timedelta(hours=int(os.getenv('TIMEZONE_BOT'))-int(os.getenv('TIMEZONE_SERVER')))
+				if post_time >= datetime.strptime(i.post_time, '%Y-%m-%d %H:%M'):
 					if i.file_type == 'photo':
 						tmz = bot.send_photo(i.chanel_id, i.file_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
 					elif i.file_type == 'document':
@@ -110,9 +109,8 @@ def end_draw_timer():
 		while 1:
 			for i in end_base.select_all(models.Draw):
 				count = 0
-				post_time = datetime.now().strftime('%Y-%m-%d %H:%M')
-				post_time = time.strptime(post_time, '%Y-%m-%d %H:%M')
-				if post_time >= time.strptime(i.end_time, '%Y-%m-%d %H:%M'):
+				post_time = datetime.now() + timedelta(hours=int(os.getenv('TIMEZONE_BOT'))-int(os.getenv('TIMEZONE_SERVER')))
+				if post_time >= datetime.strptime(i.end_time, '%Y-%m-%d %H:%M'):
 					text = language_check(i.user_id)[1]['draw']
 					players = end_base.select_all(models.DrawPlayer, draw_id=str(i.id))
 					if players == []:
