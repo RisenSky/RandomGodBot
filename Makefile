@@ -1,5 +1,8 @@
 include .env
 
+dev:
+	docker compose -f compose.yml -p ${PROJECT_NAME} up --build
+
 run:
 	docker compose -f compose.yml -p ${PROJECT_NAME} up --build -d
 
@@ -11,3 +14,6 @@ check:
 
 logs:
 	docker logs `docker ps -a --filter name="^${PROJECT_NAME}" | grep "tg-" | cut -d ' ' -f 1`
+
+connect:
+	docker exec -it `docker ps -a --filter name="^${PROJECT_NAME}" | grep "tg-" | cut -d ' ' -f 1` bash

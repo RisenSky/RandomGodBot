@@ -34,11 +34,11 @@ def create_draw_progress(user_id, tmp):
 def draw_info(user_id):
 	tmp = check_post(str(user_id))
 	text = language_check(user_id)[1]['draw']
-	draw_text = f"{text['change_text']}\n{text['post_time_text']} {tmp.post_time}\n{text['over_time_text']} {tmp.end_time}\n{text['chanel/chat']} {tmp.chanel_name}\n{text['count_text']} {tmp.winers_count}\n{text['text']} {tmp.text}"
+	return f"{text['change_text']}\n{text['post_time_text']} {tmp.post_time}\n{text['over_time_text']} {tmp.end_time}\n{text['chanel/chat']} {tmp.chanel_name}\n{text['count_text']} {tmp.winers_count}\n{text['text']} {tmp.text}"
 
 
 def check_post(user_id):
-	data = middleware_base.get_one(models.DrawProgress, user_id=str(user_id))
+	return middleware_base.get_one(models.DrawProgress, user_id=str(user_id))
 
 def send_draw_info(user_id):
 	tmp = check_post(str(user_id))
