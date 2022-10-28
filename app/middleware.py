@@ -148,7 +148,7 @@ def new_player(call):
     id = int(call.data.split('_')[1])
     tmp = middleware_base.get_one(models.Draw, id=id)
     chanel = middleware_base.select_all(models.SubscribeChannel, draw_id=tmp.id)
-    status = ['left', 'kicked', 'restricted', 'member', 'administrator', 'creator']
+    status = ['left', 'kicked', 'restricted']
     for i in chanel:
         if bot.get_chat_member(chat_id=i.channel_id, user_id=call.from_user.id).status in status:
             return 'not_subscribe'
