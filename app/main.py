@@ -39,7 +39,7 @@ def get_on_draw(call):
         tmp = middleware.new_player(call)
         if tmp == 'not_subscribe':
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['not_subscribe'])
-        if tmp == False:
+        elif tmp == False:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['already_in'])
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['got_on'])
