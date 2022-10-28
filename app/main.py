@@ -48,36 +48,36 @@ def get_on_draw(call):
         pass
 
 
-@bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['menu']['menu_buttons'][2])
-def change_language(message):
-    if message.chat.id not in ADMINS:
-        bot.send_message(message.chat.id, 'Нет доступа!')
-        return None
-    user = base.get_one(models.User, user_id=str(message.chat.id))
-    if user.language == 'RU':
-        base.update(models.User, {'language': "ENG"}, user_id=str(message.chat.id))
-        bot.send_message(message.chat.id, language_check(message.chat.id)[1]['menu']['welcome_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
-    else:
-        base.update(models.User, {'language': "RU"}, user_id=str(message.chat.id))
-        bot.send_message(message.chat.id, language_check(message.chat.id)[1]['menu']['welcome_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
+# @bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['menu']['menu_buttons'][2])
+# def change_language(message):
+#     if message.chat.id not in ADMINS:
+#         bot.send_message(message.chat.id, 'Нет доступа!')
+#         return None
+#     user = base.get_one(models.User, user_id=str(message.chat.id))
+#     if user.language == 'RU':
+#         base.update(models.User, {'language': "ENG"}, user_id=str(message.chat.id))
+#         bot.send_message(message.chat.id, language_check(message.chat.id)[1]['menu']['welcome_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
+#     else:
+#         base.update(models.User, {'language': "RU"}, user_id=str(message.chat.id))
+#         bot.send_message(message.chat.id, language_check(message.chat.id)[1]['menu']['welcome_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
 
 
-@bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['menu']['menu_buttons'][3])
-def invite(message):
-    if message.chat.id not in ADMINS:
-        bot.send_message(message.chat.id, 'Нет доступа!')
-        return None
-    text = language_check(str(message.chat.id))
-    bot.send_message(message.chat.id, text[1]['menu']['invite'])
+# @bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['menu']['menu_buttons'][3])
+# def invite(message):
+#     if message.chat.id not in ADMINS:
+#         bot.send_message(message.chat.id, 'Нет доступа!')
+#         return None
+#     text = language_check(str(message.chat.id))
+#     bot.send_message(message.chat.id, text[1]['menu']['invite'])
 
 
-@bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['menu']['menu_buttons'][4])
-def support(message):
-    if message.chat.id not in ADMINS:
-        bot.send_message(message.chat.id, 'Нет доступа!')
-        return None
-    text = language_check(str(message.chat.id))
-    bot.send_message(message.chat.id, text[1]['menu']['support'])
+# @bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['menu']['menu_buttons'][4])
+# def support(message):
+#     if message.chat.id not in ADMINS:
+#         bot.send_message(message.chat.id, 'Нет доступа!')
+#         return None
+#     text = language_check(str(message.chat.id))
+#     bot.send_message(message.chat.id, text[1]['menu']['support'])
 
 
 @bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['draw']['back_in_menu'])
