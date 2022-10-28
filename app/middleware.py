@@ -56,29 +56,32 @@ def send_draw_info(user_id):
 
 
 def my_draw_info(user_id, row=0):
-	if row < 0:
-		return 'first'
+    if row < 0:
+        return 'first'
 
-	text = language_check(user_id)[1]['my_draw']
-	notposted = middleware_base.select_all(models.DrawNot, user_id=str(user_id))
-	posted = middleware_base.select_all(models.Draw, user_id=str(user_id))
-	all_draws = notposted + posted
-	if len(all_draws) == 0:
-		bot.send_message(user_id, text['no_draw'])
+    text = language_check(user_id)[1]['my_draw']
+    notposted = middleware_base.select_all(models.DrawNot, user_id=str(user_id))
+    posted = middleware_base.select_all(models.Draw, user_id=str(user_id))
+    all_draws = notposted + posted
+    if len(all_draws) == 0:
+        bot.send_message(user_id, text['no_draw'])
 
-	if row >= len(all_draws):
-		print('notttt')
+    if row >= len(all_draws):
+        print('notttt')
 
-
-
-	draw_text = f"{text['your_draw']}\n{text['post_time_text']} {all_draws[row].post_time}\n{text['over_time_text']} {all_draws[row].end_time}\n{text['chanel/chat']} {all_draws[row].chanel_name}\n{text['count_text']} {all_draws[row].winers_count}\n{text['text']} {all_draws[row].text}"
-	keyboard = create_inlineKeyboard({text['back']: "back", text['next']: "next"}, 2)
-	if all_draws[row].file_type == 'photo':
-		bot.send_photo(user_id, all_draws[row].file_id, draw_text, reply_markup=keyboard)
-	elif all_draws[row].file_type == 'document':
-		bot.send_document(user_id, all_draws[row].file_id, caption=draw_text, reply_markup=keyboard)
-	else:
-		bot.send_message(user_id, draw_text, reply_markup=keyboard)
+    try:
+        draw_text = f"{text['your_draw']}\n{text['post_time_text']} {all_draws[row].post_time}\n{text['over_time_text']} {all_draws[row].end_time}\n{text['chanel/chat']} {all_draws[row].chanel_name}\n{text['count_text']} {all_draws[row].winers_count}\n{text['text']} {all_draws[row].text}"
+        keyboard = create_inlineKeyboard({text['back']: "back", text['next']: "next"}, 2)
+        if all_draws[row].file_type == 'photo':
+            bot.send_photo(user_id, all_draws[row].file_id, draw_text, reply_markup=keyboard)
+        elif all_draws[row].file_type == 'document':
+            bot.send_document(user_id, all_draws[row].file_id, caption=draw_text, reply_markup=keyboard)
+        else:
+            bot.send_message(user_id, draw_text, reply_markup=keyboard)
+    except Exception as e:
+        print(e)
+        print(text)
+        print(all_draws)
 
 
 

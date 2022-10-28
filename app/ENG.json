@@ -1,7 +1,7 @@
 {
   "menu": {
          "welcome_text": "👋Hi!\n The God of random will help you create a giveaway on the channel.\n Are you ready to create a new giveaway?",
-         "menu_buttons": ["Create giveaway 🎁", "My giveaways 🎉", "Сменить язык 🇷🇺", "Support ⁉️", "Share with a friends 👥"],
+         "menu_buttons": ["Create giveaway 🎁", "My giveaways 🎉"],
          "invite": "Share the bot with your friends by sending them the bot username \n @RandomGodBot",
          "support": "t.me/FeedbackRandomGodBot"
         },
