@@ -1,19 +1,19 @@
 include .env
 
 dev:
-	docker compose -f compose.yml -p ${PROJECT_NAME} up --build
+	sudo docker compose -f compose.yml -p ${PROJECT_NAME} up --build
 
 run:
-	docker compose -f compose.yml -p ${PROJECT_NAME} up --build -d
+	sudo docker compose -f compose.yml -p ${PROJECT_NAME} up --build -d
 
 stop:
-	docker compose -f compose.yml -p ${PROJECT_NAME} stop
+	sudo docker compose -f compose.yml -p ${PROJECT_NAME} stop
 
 check:
-	docker ps --filter name="^${PROJECT_NAME}" --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+	sudo docker ps --filter name="^${PROJECT_NAME}" --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
 
 logs:
-	docker logs `docker ps -a --filter name="^${PROJECT_NAME}" | grep "tg-" | cut -d ' ' -f 1`
+	sudo docker logs `docker ps -a --filter name="^${PROJECT_NAME}" | grep "tg-" | cut -d ' ' -f 1`
 
 connect:
-	docker exec -it `docker ps -a --filter name="^${PROJECT_NAME}" | grep "tg-" | cut -d ' ' -f 1` bash
+	sudo docker exec -it `docker ps -a --filter name="^${PROJECT_NAME}" | grep "tg-" | cut -d ' ' -f 1` bash
