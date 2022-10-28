@@ -145,19 +145,19 @@ def end_draw_timer():
 
 
 def new_player(call):
-	id = int(call.data.split('_')[1])
-	tmp = middleware_base.get_one(models.Draw, id=id)
-	chanel = middleware_base.select_all(models.SubscribeChannel, draw_id=tmp.id)
-	status = ['left', 'kicked', 'restricted', 'member', 'admini', 'creator']
-	for i in chanel:
-		if bot.get_chat_member(chat_id=i.channel_id, user_id=call.from_user.id).status in status:
-			return ('not_subscribe')
+    id = int(call.data.split('_')[1])
+    tmp = middleware_base.get_one(models.Draw, id=id)
+    chanel = middleware_base.select_all(models.SubscribeChannel, draw_id=tmp.id)
+    status = ['left', 'kicked', 'restricted', 'member', 'admin', 'creator']
+    for i in chanel:
+        if bot.get_chat_member(chat_id=i.channel_id, user_id=call.from_user.id).status in status:
+            return 'not_subscribe'
 
-	players = middleware_base.get_one(models.DrawPlayer, draw_id=str(tmp.id), user_id=str(call.from_user.id))
-	if players == None:
-		middleware_base.new(models.DrawPlayer, tmp.id, str(call.from_user.id), str(call.from_user.username))
-		tmz = middleware_base.select_all(models.DrawPlayer, draw_id=tmp.id)
-		return (len(tmz), language_check(tmp.user_id)[1]['draw']['play'])
-	else:
-		return (False)
+    players = middleware_base.get_one(models.DrawPlayer, draw_id=str(tmp.id), user_id=str(call.from_user.id))
+    if players == None:
+        middleware_base.new(models.DrawPlayer, tmp.id, str(call.from_user.id), str(call.from_user.username))
+        tmz = middleware_base.select_all(models.DrawPlayer, draw_id=tmp.id)
+        return (len(tmz), language_check(tmp.user_id)[1]['draw']['play'])
+    else:
+        return False
 

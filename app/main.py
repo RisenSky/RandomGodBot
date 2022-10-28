@@ -37,13 +37,13 @@ def get_on_draw(call):
     try:
         text = language_check(call.message.chat.id)[1]['draw']
         tmp = middleware.new_player(call)
-        if tmp[1] == 'not_subscribe':
+        if tmp == 'not_subscribe':
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['not_subscribe'])
-        if tmp[0] == False:
+        if tmp == False:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['already_in'])
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['got_on'])
-            bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, inline_message_id=call.inline_message_id, reply_markup=create_inlineKeyboard({f"({tmp[1]}) {tmp[2]}":call.data}))
+            bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, inline_message_id=call.inline_message_id, reply_markup=create_inlineKeyboard({f"({tmp[0]}) {tmp[1]}":call.data}))
     except:
         pass
 
