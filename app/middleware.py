@@ -22,7 +22,7 @@ def check_user(user_id):
 
 def create_draw_progress(user_id, tmp):
 	middleware_base.delete(models.DrawProgress, user_id=(str(user_id)))
-	middleware_base.new(models.DrawProgress, str(user_id), tmp['chanel_id'], tmp['chanel_name'], tmp['draw_text'], tmp['file_type'], tmp['file_id'], int(tmp['winers_count']), tmp['start_time'], tmp['end_time'])
+	middleware_base.new(models.DrawProgress, str(user_id), tmp['draw_text'], tmp['file_type'], tmp['file_id'], int(tmp['winers_count']), tmp['start_time'], tmp['end_time']) # tmp['chanel_id'], tmp['chanel_name'],
 	middleware_base.delete(models.State, user_id=str(user_id))
 
 	return draw_info(user_id)
@@ -88,23 +88,26 @@ def my_draw_info(user_id, row=0):
 
 
 def start_draw_timer():
-	def timer():
-		while 1:
-			for i in post_base.select_all(models.DrawNot):
-				count = 0
-				post_time = datetime.now() + timedelta(hours=int(os.getenv('TIMEZONE_BOT'))-int(os.getenv('TIMEZONE_SERVER')))
-				if post_time >= datetime.strptime(i.post_time, '%Y-%m-%d %H:%M'):
-					if i.file_type == 'photo':
-						tmz = bot.send_photo(i.chanel_id, i.file_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
-					elif i.file_type == 'document':
-						tmz = bot.send_document(i.chanel_id, i.file_id, caption=i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
-					else:
-						tmz = bot.send_message(i.chanel_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
-					post_base.new(models.Draw, i.id, i.user_id, tmz.message_id, i.chanel_id, i.chanel_name, i.text, i.file_type, i.file_id, i.winers_count, i.post_time, i.end_time)
-					post_base.delete(models.DrawNot, id=str(i.id))
-			time.sleep(5)
-	rT = threading.Thread(target = timer)
-	rT.start()
+    def timer():
+        while 1:
+            for i in post_base.select_all(models.DrawNot):
+                if not i.chanel_id:
+                    post_base.delete(models.DrawNot, id=str(i.id))
+                    continue
+                count = 0
+                post_time = datetime.now() + timedelta(hours=int(os.getenv('TIMEZONE_BOT'))-int(os.getenv('TIMEZONE_SERVER')))
+                if post_time >= datetime.strptime(i.post_time, '%Y-%m-%d %H:%M'):
+                    if i.file_type == 'photo':
+                        tmz = bot.send_photo(i.chanel_id, i.file_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+                    elif i.file_type == 'document':
+                        tmz = bot.send_document(i.chanel_id, i.file_id, caption=i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+                    else:
+                        tmz = bot.send_message(i.chanel_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+                    post_base.new(models.Draw, i.id, i.user_id, tmz.message_id, i.chanel_id, i.chanel_name, i.text, i.file_type, i.file_id, i.winers_count, i.post_time, i.end_time)
+                    post_base.delete(models.DrawNot, id=str(i.id))
+            time.sleep(5)
+    rT = threading.Thread(target = timer)
+    rT.start()
 
 
 def end_draw_timer():

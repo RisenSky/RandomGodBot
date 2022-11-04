@@ -165,28 +165,30 @@ def enter_id(message):
     text = language_check(str(message.chat.id))[1]['draw']
     back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     back_button.row(text['back_in_menu'])
-    fsm.set_state(message.chat.id, "writting_channel_id")
-    bot.send_message(message.chat.id, text['chanel_id'], reply_markup=back_button)
-
-
-@bot.message_handler(func=lambda message: True and fsm.get_state(message.chat.id)[0] == 'writting_channel_id')
-def enter_text(message):
-    status = ['creator', 'administrator']
-    text = language_check(str(message.chat.id))[1]['draw']
-    back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    back_button.row(text['back_in_menu'])
-
-    try:
-        if str(bot.get_chat_member(chat_id=message.text, user_id=message.from_user.id).status) not in status:
-            bot.send_message(text['not_admin'], reply_markup=back_button)
-            return ''
-        tmp = bot.send_message(message.text, 'test')
-        bot.delete_message(tmp.chat.id, tmp.message_id)
-    except:
-        bot.send_message(message.chat.id, text['not_in_chanel'], reply_markup=back_button)
-        return ''
-    fsm.set_state(message.chat.id, "writting_text", chanel_id=message.text, chanel_name=tmp.chat.title)
+    # fsm.set_state(message.chat.id, "writting_channel_id")
+    # bot.send_message(message.chat.id, text['chanel_id'], reply_markup=back_button)
+    fsm.set_state(message.chat.id, "writting_text", chanel_id=message.text)
     bot.send_message(message.chat.id, text['draw_text'], reply_markup=back_button)
+
+
+# @bot.message_handler(func=lambda message: True and fsm.get_state(message.chat.id)[0] == 'writting_channel_id')
+# def enter_text(message):
+#     status = ['creator', 'administrator']
+#     text = language_check(str(message.chat.id))[1]['draw']
+#     back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+#     back_button.row(text['back_in_menu'])
+
+#     try:
+#         if str(bot.get_chat_member(chat_id=message.text, user_id=message.from_user.id).status) not in status:
+#             bot.send_message(text['not_admin'], reply_markup=back_button)
+#             return ''
+#         tmp = bot.send_message(message.text, 'test')
+#         bot.delete_message(tmp.chat.id, tmp.message_id)
+#     except:
+#         bot.send_message(message.chat.id, text['not_in_chanel'], reply_markup=back_button)
+#         return ''
+#     fsm.set_state(message.chat.id, "writting_text", chanel_id=message.text, chanel_name=tmp.chat.title)
+#     bot.send_message(message.chat.id, text['draw_text'], reply_markup=back_button)
 
 
 @bot.message_handler(func=lambda message: True and fsm.get_state(message.chat.id)[0] == 'writting_text')
@@ -198,8 +200,10 @@ def enter_photo(message):
     back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     back_button.row(text['back_in_menu'])
     tmp = fsm.get_state(message.chat.id)[1]
-    fsm.set_state(message.chat.id, "enter_photo", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=message.text)
+    fsm.set_state(message.chat.id, "enter_photo", draw_text=message.text) # chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name']
     bot.send_message(message.chat.id, text['file'], reply_markup=back_button)
+    # fsm.set_state(message.chat.id, "writting_text", chanel_id=message.text)
+    # bot.send_message(message.chat.id, text['draw_text'], reply_markup=back_button)
 
 
 @bot.message_handler(content_types=['text', 'photo', 'document'], func=lambda message: True and fsm.get_state(message.chat.id)[0] == 'enter_photo')
@@ -223,7 +227,7 @@ def enter_photo(message):
         file_id = ''
         file_type = 'text'
 
-    fsm.set_state(message.chat.id, "enter_winers_count", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'], file_type=file_type, file_id=file_id)
+    fsm.set_state(message.chat.id, "enter_winers_count", draw_text=tmp['draw_text'], file_type=file_type, file_id=file_id) # chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name']
     bot.send_message(message.chat.id, text['winers_count'], reply_markup=back_button)
 
 
@@ -242,8 +246,7 @@ def enter_winers_count(message):
     back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     back_button.row(text['back_in_menu'])
     tmp = fsm.get_state(message.chat.id)[1]
-    fsm.set_state(message.chat.id, "enter_start_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'],
-                    file_type=tmp['file_type'], file_id=tmp['file_id'], winers_count=message.text)
+    fsm.set_state(message.chat.id, "enter_start_time", draw_text=tmp['draw_text'], file_type=tmp['file_type'], file_id=tmp['file_id'], winers_count=message.text) # chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'],
 
     bot.send_message(message.chat.id, text['post_time'], reply_markup=back_button)
 
@@ -269,8 +272,7 @@ def enter_start_time(message):
     back_button.row(text['back_in_menu'])
 
     tmp = fsm.get_state(message.chat.id)[1]
-    fsm.set_state(message.chat.id, "enter_end_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'],
-                    file_type=tmp['file_type'], file_id=tmp['file_id'], winers_count=tmp['winers_count'], start_time=message.text)
+    fsm.set_state(message.chat.id, "enter_end_time", draw_text=tmp['draw_text'], file_type=tmp['file_type'], file_id=tmp['file_id'], winers_count=tmp['winers_count'], start_time=message.text) # chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'],
 
     bot.send_message(message.chat.id, text['end_time'], reply_markup=back_button)
 
@@ -299,8 +301,7 @@ def enter_end_time(message):
 
     back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     back_button.row(text['back_in_menu'])
-    fsm.set_state(message.chat.id, "enter_end_time", chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'], draw_text=tmp['draw_text'], file_type=tmp['file_type'],
-                    file_id=tmp['file_id'], winers_count=tmp['winers_count'], start_time=tmp['start_time'], end_time=message.text)
+    fsm.set_state(message.chat.id, "enter_end_time", draw_text=tmp['draw_text'], file_type=tmp['file_type'], file_id=tmp['file_id'], winers_count=tmp['winers_count'], start_time=tmp['start_time'], end_time=message.text) # chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'],
     tmp = fsm.get_state(message.chat.id)[1]
     if tmp['file_type'] == 'photo':
         bot.send_photo(message.chat.id, tmp['file_id'], middleware.create_draw_progress(message.chat.id, tmp), reply_markup=keyboard.get_draw_keyboard(message.chat.id))
@@ -475,10 +476,14 @@ def add_chanel(message):
     bot.send_message(message.chat.id, text['chanel_id_check'], reply_markup=keyboard.back_button(message.chat.id))
 
 
-@bot.message_handler(func=lambda message: True and fsm.get_state(message.chat.id)[0] == 'add_check_channel')
+@bot.message_handler(func=lambda message: fsm.get_state(message.chat.id)[0] == 'add_check_channel')
 def add_check_channel(message):
     if message.chat.id not in ADMINS:
         bot.send_message(message.chat.id, 'Нет доступа!')
+        return None
+
+    if message.text == "Готово":
+        middleware.send_draw_info(message.chat.id)
         return None
 
     text = language_check(str(message.chat.id))[1]['draw']
@@ -492,8 +497,9 @@ def add_check_channel(message):
         return ''
     tmp = base.get_one(models.DrawProgress, user_id=str(message.chat.id))
     base.new(models.SubscribeChannel, tmp.id, str(message.chat.id), message.text)
-    middleware.send_draw_info(message.chat.id)
-    print(base.select_all(models.SubscribeChannel))
+    bot.send_message(message.chat.id, '✅ Канал добавлен успешно. Если больше не нужно добавлять каналы, нажмите кнопку "Готово". В противном случае, отправьте еще один канал.', reply_markup=keyboard.done())
+    # middleware.send_draw_info(message.chat.id)
+    # print(base.select_all(models.SubscribeChannel))
 
 
 if __name__ == '__main__':

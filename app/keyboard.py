@@ -27,3 +27,8 @@ def back_button(user_id):
 	return back_button
 
 
+def done():
+	back_button = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+	back_button.row("Готово")
+	return back_button
+
