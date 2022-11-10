@@ -35,7 +35,7 @@ def create_draw_progress(user_id, tmp):
 def draw_info(user_id):
 	tmp = check_post(str(user_id))
 	text = language_check(user_id)[1]['draw']
-	return f"{text['change_text']}\n{text['post_time_text']} {tmp.post_time}\n{text['over_time_text']} {tmp.end_time}\n{text['chanel/chat']} {tmp.chanel_name}\n{text['count_text']} {tmp.winers_count}\n{text['text']} {tmp.text}"
+	return f"{text['change_text']}\n{text['post_time_text']} {tmp.post_time}\n{text['over_time_text']} {tmp.end_time}\n{text['count_text']} {tmp.winers_count}\n{text['text']} {tmp.text}" # \n{text['chanel/chat']} {tmp.chanel_name}
 
 
 def check_post(user_id):
@@ -44,7 +44,7 @@ def check_post(user_id):
 def send_draw_info(user_id):
 	tmp = check_post(str(user_id))
 	text = language_check(user_id)[1]['draw']
-	draw_text = f"{text['change_text']}\n{text['post_time_text']} {tmp.post_time}\n{text['over_time_text']} {tmp.end_time}\n{text['chanel/chat']} {tmp.chanel_name}\n{text['count_text']} {tmp.winers_count}\n{text['text']} {tmp.text}"
+	draw_text = f"{text['change_text']}\n{text['post_time_text']} {tmp.post_time}\n{text['over_time_text']} {tmp.end_time}\n{text['count_text']} {tmp.winers_count}\n{text['text']} {tmp.text}" # \n{text['chanel/chat']} {tmp.chanel_name}
 	if tmp.file_type == 'photo':
 		bot.send_photo(user_id, tmp.file_id, draw_text, reply_markup=keyboard.get_draw_keyboard(user_id))
 	if tmp.file_type == 'document':
@@ -97,59 +97,78 @@ def start_draw_timer():
                 count = 0
                 post_time = datetime.now() + timedelta(hours=int(os.getenv('TIMEZONE_BOT'))-int(os.getenv('TIMEZONE_SERVER')))
                 if post_time >= datetime.strptime(i.post_time, '%Y-%m-%d %H:%M'):
-                    if i.file_type == 'photo':
-                        tmz = bot.send_photo(i.chanel_id, i.file_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
-                    elif i.file_type == 'document':
-                        tmz = bot.send_document(i.chanel_id, i.file_id, caption=i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
-                    else:
-                        tmz = bot.send_message(i.chanel_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
-                    post_base.new(models.Draw, i.id, i.user_id, tmz.message_id, i.chanel_id, i.chanel_name, i.text, i.file_type, i.file_id, i.winers_count, i.post_time, i.end_time)
-                    post_base.delete(models.DrawNot, id=str(i.id))
+                    safed = False
+                    for chanel_id in i.channels:
+                        if i.file_type == 'photo':
+                            tmz = bot.send_photo(chanel_id, i.file_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+                        elif i.file_type == 'document':
+                            tmz = bot.send_document(chanel_id, i.file_id, caption=i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+                        else:
+                            tmz = bot.send_message(chanel_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+
+                        if safed:
+                            continue
+
+                        post_base.new(models.Draw, i.id, i.user_id, tmz.message_id, chanel_id, '-', i.text, i.file_type, i.file_id, i.winers_count, i.post_time, i.end_time, i.channels)
+                        post_base.delete(models.DrawNot, id=str(i.id))
+                        safed = True
+
             time.sleep(5)
+
     rT = threading.Thread(target = timer)
     rT.start()
 
 
 def end_draw_timer():
-	def end_timer():
-		while 1:
-			for i in end_base.select_all(models.Draw):
-				count = 0
-				post_time = datetime.now() + timedelta(hours=int(os.getenv('TIMEZONE_BOT'))-int(os.getenv('TIMEZONE_SERVER')))
-				if post_time >= datetime.strptime(i.end_time, '%Y-%m-%d %H:%M'):
-					text = language_check(i.user_id)[1]['draw']
-					players = end_base.select_all(models.DrawPlayer, draw_id=str(i.id))
-					if players == []:
-						winers = f"{i.text}\n*****\n{text['no_winers']}"
-						owin = f"{text['no_winers']}"
-					else:
-						winers = f"{i.text}\n*****\n{text['winers']}\n"
-						owin = f"{text['winers']}\n"
-						for x in range(int(i.winers_count)):
-							if count >= len(players):
-								break
-							random_player = random.choice(players)
-							winers += f"<a href='tg://user?id={random_player.user_id}'>{random_player.user_name}</a>\n"
-							owin += f"<a href='tg://user?id={random_player.user_id}'>{random_player.user_name}</a>\n"
-							count += 1
-					try:
-						bot.send_message(chat_id=str(i.chanel_id), text=winers, parse_mode='HTML')
-					except:
-						end_base.delete(models.Draw, id = i.id)
-						bot.send_message(i.chanel_id, text['failed_post'])
-						return 'gg'
-					bot.send_message(i.user_id, f"{text['your_draw_over']}\n{owin}", parse_mode='HTML')
-					end_base.delete(models.Draw, id = i.id)
-					time.sleep(1)
+    def end_timer():
+        while 1:
+            for i in end_base.select_all(models.Draw):
+                count = 0
+                post_time = datetime.now() + timedelta(hours=int(os.getenv('TIMEZONE_BOT'))-int(os.getenv('TIMEZONE_SERVER')))
+                if post_time >= datetime.strptime(i.end_time, '%Y-%m-%d %H:%M'):
+                    text = language_check(i.user_id)[1]['draw']
+                    players = end_base.select_all(models.DrawPlayer, draw_id=str(i.id))
+                    if players == []:
+                        winers = f"{i.text}\n*****\n{text['no_winers']}"
+                        owin = f"{text['no_winers']}"
+                    else:
+                        winers = f"{i.text}\n*****\n{text['winers']}\n"
+                        owin = f"{text['winers']}\n"
+                        for x in range(int(i.winers_count)):
+                            if count >= len(players):
+                                break
+                            random_player = random.choice(players)
+                            winers += f"<a href='tg://user?id={random_player.user_id}'>{random_player.user_name}</a>\n"
+                            owin += f"<a href='tg://user?id={random_player.user_id}'>{random_player.user_name}</a>\n"
+                            count += 1
 
-			time.sleep(5)
-	rT = threading.Thread(target = end_timer)
-	rT.start()
+                    for channel_id in i.channels:
+                        try:
+                            bot.send_message(
+                                chat_id=str(channel_id),
+                                text=winers,
+                                parse_mode='HTML',
+                            )
+                        except:
+                            end_base.delete(models.Draw, id = i.id)
+                            bot.send_message(channel_id, text['failed_post'])
+                            return 'gg'
+                    bot.send_message(i.user_id, f"{text['your_draw_over']}\n{owin}", parse_mode='HTML')
+                    end_base.delete(models.Draw, id = i.id)
+                    time.sleep(1)
+
+            time.sleep(5)
+    rT = threading.Thread(target = end_timer)
+    rT.start()
 
 
 def new_player(call):
     id = int(call.data.split('_')[1])
     tmp = middleware_base.get_one(models.Draw, id=id)
+
+    if tmp is None:
+        return None
+
     chanel = middleware_base.select_all(models.SubscribeChannel, draw_id=tmp.id)
     status = ['left', 'kicked', 'restricted']
     for i in chanel:
@@ -158,7 +177,7 @@ def new_player(call):
 
     players = middleware_base.get_one(models.DrawPlayer, draw_id=str(tmp.id), user_id=str(call.from_user.id))
     if players == None:
-        middleware_base.new(models.DrawPlayer, tmp.id, str(call.from_user.id), str(call.from_user.username))
+        middleware_base.new(models.DrawPlayer, tmp.id, str(call.from_user.id), str(call.from_user.username) if call.from_user.username else f"id{call.from_user.id}")
         tmz = middleware_base.select_all(models.DrawPlayer, draw_id=tmp.id)
         return (len(tmz), language_check(tmp.user_id)[1]['draw']['play'])
     else:

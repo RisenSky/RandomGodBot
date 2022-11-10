@@ -37,15 +37,32 @@ def get_on_draw(call):
     try:
         text = language_check(call.message.chat.id)[1]['draw']
         tmp = middleware.new_player(call)
+
+        if tmp is None:
+            bot.answer_callback_query(
+                callback_query_id=call.id,
+                show_alert=True,
+                text="Розыгрыш завершён!",
+            )
+            return None
+
         if tmp == 'not_subscribe':
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['not_subscribe'])
-        elif tmp == False:
+            return None
+
+        if tmp == False:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['already_in'])
-        else:
-            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['got_on'])
-            bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, inline_message_id=call.inline_message_id, reply_markup=create_inlineKeyboard({f"({tmp[0]}) {tmp[1]}":call.data}))
+            return None
+
+        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,  text=text['got_on'])
+        bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, inline_message_id=call.inline_message_id, reply_markup=create_inlineKeyboard({f"({tmp[0]}) {tmp[1]}":call.data}))
+
     except:
-        pass
+        bot.answer_callback_query(
+            callback_query_id=call.id,
+            show_alert=True,
+            text="Розыгрыш завершён!",
+        )
 
 
 # @bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['menu']['menu_buttons'][2])
@@ -150,12 +167,21 @@ def back(call):
 
 @bot.message_handler(func=lambda message: True and middleware.check_post(message.chat.id) != None and message.text == language_check(message.chat.id)[1]['draw']['draw_buttons'][-2])
 def submit(message):
-    text = language_check(str(message.chat.id))
-    bot.send_message(message.chat.id, text[1]['draw']['submit_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
+    if message.chat.id not in ADMINS:
+        bot.send_message(message.chat.id, 'Нет доступа!')
+        return None
+
     tmp = base.get_one(models.DrawProgress, user_id=str(message.chat.id))
-    base.new(models.DrawNot, tmp.id, tmp.user_id, tmp.chanel_id, tmp.chanel_name, tmp.text, tmp.file_type, tmp.file_id, tmp.winers_count, tmp.post_time, tmp.end_time)
+    if not tmp.channels:
+        bot.send_message(message.chat.id, 'Не указаны каналы публикации!')
+        return None
+
+    base.new(models.DrawNot, tmp.id, tmp.user_id, tmp.channels[0], '-', tmp.text, tmp.file_type, tmp.file_id, tmp.winers_count, tmp.post_time, tmp.end_time, tmp.channels)
     base.delete(models.DrawProgress, user_id=(str(message.chat.id)))
     base.delete(models.State, user_id=(str(message.chat.id)))
+
+    text = language_check(str(message.chat.id))
+    bot.send_message(message.chat.id, text[1]['draw']['submit_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
 
 
 @bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['menu']['menu_buttons'][0])
@@ -496,6 +522,7 @@ def add_check_channel(message):
         bot.send_message(message.chat.id, text['not_in_chanel'])
         return ''
     tmp = base.get_one(models.DrawProgress, user_id=str(message.chat.id))
+    base.update(models.DrawProgress, {'channels': (tmp.channels or []) + [message.text]}, user_id=str(message.chat.id))
     base.new(models.SubscribeChannel, tmp.id, str(message.chat.id), message.text)
     bot.send_message(message.chat.id, '✅ Канал добавлен успешно. Если больше не нужно добавлять каналы, нажмите кнопку "Готово". В противном случае, отправьте еще один канал.', reply_markup=keyboard.done())
     # middleware.send_draw_info(message.chat.id)
