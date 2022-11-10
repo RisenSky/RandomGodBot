@@ -150,15 +150,10 @@ def end_draw_timer():
                     else:
                         winers = f"{i.text}\n*****\n{text['winers']}\n"
                         owin = f"{text['winers']}\n"
-                        pls = []
-                        for x in range(min(int(i.winers_count), len(players))):
-                            if count >= len(players):
-                                break
-
-                            random_player = random.choice(players)
-                            if random_player.user_id in pls:
-                                continue
-                            pls.append(random_player.user_id)
+                        pls = {p.user_id: p for p in players}
+                        for _ in range(min(int(i.winers_count), len(players))):
+                            random_player = random.choice(list(pls.values()))
+                            del pls[random_player.user_id]
 
                             winers += f"<a href='tg://user?id={random_player.user_id}'>{random_player.user_name}</a>\n"
                             owin += f"<a href='tg://user?id={random_player.user_id}'>{random_player.user_name}</a>\n"
