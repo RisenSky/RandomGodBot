@@ -2,7 +2,7 @@
   "menu": {
          "welcome_text": "👋Hi!\n The God of random will help you create a giveaway on the channel.\n Are you ready to create a new giveaway?",
          "menu_buttons": ["Create giveaway 🎁", "My giveaways 🎉", "Сменить язык 🇷🇺", "Support ⁉️", "Share with a friends 👥"],
-         "invite": "Share the bot with your friends by sending them the bot username \n @RandomGodBot",
+         "invite": "Share the bot with your friends by sending them the bot username",
          "support": "t.me/FeedbackRandomGodBot"
         },
   "draw": {
@@ -41,9 +41,9 @@
 
 
          "play":"Participate",
-         "not_subscribe": "@RandomGodBot: You haven't subscribed to all channels, please read the giveaway discription carefully and subscribe to all necessary channels to participate",
-         "already_in":"@RandomGodBot: You've already taken part",
-         "got_on":"@RandomGodBot: Congratulations, you entered the giveaway!",
+         "not_subscribe": "You haven't subscribed to all channels, please read the giveaway discription carefully and subscribe to all necessary channels to participate",
+         "already_in":"You've already taken part",
+         "got_on":"Congratulations, you entered the giveaway!",
 
          "winers":"The giveaway has ended.\n Winners:",
          "no_winers":"No winners",
