@@ -434,7 +434,7 @@ def confirm_change_wines_count(message):
         bot.send_message(message.chat.id, language_check(message.chat.id)[1]['draw']['not_int'])
         return 'gg'
 
-    base.update(models.DrawProgress, {'winers_count': message.text}, user_id=str(message.chat.id))
+    base.update(models.DrawProgress, {'winers_count': int(message.text)}, user_id=str(message.chat.id))
     middleware.send_draw_info(message.chat.id)
 
 

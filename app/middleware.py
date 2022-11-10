@@ -100,11 +100,27 @@ def start_draw_timer():
                     safed = False
                     for chanel_id in i.channels:
                         if i.file_type == 'photo':
-                            tmz = bot.send_photo(chanel_id, i.file_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+                            tmz = bot.send_photo(
+                                chanel_id,
+                                i.file_id,
+                                i.text,
+                                parse_mode='HTML', reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}),
+                            )
                         elif i.file_type == 'document':
-                            tmz = bot.send_document(chanel_id, i.file_id, caption=i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+                            tmz = bot.send_document(
+                                chanel_id,
+                                i.file_id,
+                                caption=i.text,
+                                parse_mode='HTML',
+                                reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}),
+                            )
                         else:
-                            tmz = bot.send_message(chanel_id, i.text, reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}))
+                            tmz = bot.send_message(
+                                chanel_id,
+                                i.text,
+                                parse_mode='HTML',
+                                reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}),
+                            )
 
                         if safed:
                             continue
