@@ -102,10 +102,14 @@ def back_in_menu(message):
     if message.chat.id not in ADMINS:
         bot.send_message(message.chat.id, 'Нет доступа!')
         return None
-    base.delete(models.State, user_id=str(message.chat.id))
-    base.delete(models.DrawProgress, user_id=(str(message.chat.id)))
-    base.delete(models.SubscribeChannel, user_id=(str(message.chat.id)))
-    bot.send_message(message.chat.id, language_check(message.chat.id)[1]['menu']['welcome_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
+    try:
+        base.delete(models.State, user_id=str(message.chat.id))
+        base.delete(models.DrawProgress, user_id=(str(message.chat.id)))
+        base.delete(models.SubscribeChannel, user_id=(str(message.chat.id)))
+        bot.send_message(message.chat.id, language_check(message.chat.id)[1]['menu']['welcome_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
+    except Exception as e:
+        print(e)
+        bot.send_message(message.chat.id, language_check(message.chat.id)[1]['menu']['welcome_text'], reply_markup=keyboard.get_menu_keyboard(message.chat.id))
 
 
 @bot.message_handler(func=lambda message: True and message.text == language_check(message.chat.id)[1]['draw']['back'] and middleware.check_post(message.chat.id) != None)
@@ -113,7 +117,10 @@ def back_in_draw_menu(message):
     if message.chat.id not in ADMINS:
         bot.send_message(message.chat.id, 'Нет доступа!')
         return None
-    base.delete(models.State, user_id=str(message.chat.id))
+    try:
+        base.delete(models.State, user_id=str(message.chat.id))
+    except Exception as e:
+        print(e)
     middleware.send_draw_info(message.chat.id)
 
 
