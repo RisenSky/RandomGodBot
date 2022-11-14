@@ -530,4 +530,8 @@ def add_check_channel(message):
 
 
 if __name__ == '__main__':
-	bot.polling(none_stop=True)
+    while True:
+        try:
+            bot.infinity_polling(none_stop=True)
+        except Exception as e:
+            print(e)
