@@ -337,8 +337,11 @@ def enter_end_time(message):
     fsm.set_state(message.chat.id, "enter_end_time", draw_text=tmp['draw_text'], file_type=tmp['file_type'], file_id=tmp['file_id'], winers_count=tmp['winers_count'], start_time=tmp['start_time'], end_time=message.text) # chanel_id=tmp['chanel_id'], chanel_name=tmp['chanel_name'],
     tmp = fsm.get_state(message.chat.id)[1]
     if tmp['file_type'] == 'photo':
-        bot.send_photo(message.chat.id, tmp['file_id'])
-        bot.send_message(message.chat.id, middleware.create_draw_progress(message.chat.id, tmp), reply_markup=keyboard.get_draw_keyboard(message.chat.id))
+        try:
+            bot.send_photo(message.chat.id, tmp['file_id'], middleware.create_draw_progress(message.chat.id, tmp), reply_markup=keyboard.get_draw_keyboard(message.chat.id))
+        except:
+            bot.send_photo(message.chat.id, tmp['file_id'])
+            bot.send_message(message.chat.id, middleware.create_draw_progress(message.chat.id, tmp), reply_markup=keyboard.get_draw_keyboard(message.chat.id))
     elif tmp['file_type'] == 'document':
         bot.send_document(message.chat.id, tmp['file_id'], caption=middleware.create_draw_progress(message.chat.id, tmp), reply_markup=keyboard.get_draw_keyboard(message.chat.id))
     else:
