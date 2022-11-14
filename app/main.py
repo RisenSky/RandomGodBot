@@ -338,11 +338,11 @@ def enter_end_time(message):
     tmp = fsm.get_state(message.chat.id)[1]
     if tmp['file_type'] == 'photo':
         texttt = middleware.create_draw_progress(message.chat.id, tmp)
-        if len(texttt) < 4000:
-            bot.send_photo(message.chat.id, tmp['file_id'], texttt, reply_markup=keyboard.get_draw_keyboard(message.chat.id))
-        else:
-            bot.send_photo(message.chat.id, tmp['file_id'])
-            bot.send_message(message.chat.id, texttt, reply_markup=keyboard.get_draw_keyboard(message.chat.id))
+        # if len(texttt) < 4000:
+        #     bot.send_photo(message.chat.id, tmp['file_id'], texttt, reply_markup=keyboard.get_draw_keyboard(message.chat.id))
+        # else:
+        bot.send_photo(message.chat.id, tmp['file_id'])
+        bot.send_message(message.chat.id, texttt, reply_markup=keyboard.get_draw_keyboard(message.chat.id))
     elif tmp['file_type'] == 'document':
         bot.send_document(message.chat.id, tmp['file_id'], caption=middleware.create_draw_progress(message.chat.id, tmp), reply_markup=keyboard.get_draw_keyboard(message.chat.id))
     else:

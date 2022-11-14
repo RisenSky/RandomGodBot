@@ -46,11 +46,11 @@ def send_draw_info(user_id):
     text = language_check(user_id)[1]['draw']
     draw_text = f"{text['change_text']}\n{text['post_time_text']} {tmp.post_time}\n{text['over_time_text']} {tmp.end_time}\n{text['count_text']} {tmp.winers_count}\n{text['text']} {tmp.text}" # \n{text['chanel/chat']} {tmp.chanel_name}
     if tmp.file_type == 'photo':
-        if len(draw_text) < 4000:
-            bot.send_photo(user_id, tmp.file_id, draw_text, reply_markup=keyboard.get_draw_keyboard(user_id))
-        else:
-            bot.send_photo(user_id, tmp.file_id)
-            bot.send_message(user_id, draw_text, reply_markup=keyboard.get_draw_keyboard(user_id))
+        # if len(draw_text) < 4000:
+        #     bot.send_photo(user_id, tmp.file_id, draw_text, reply_markup=keyboard.get_draw_keyboard(user_id))
+        # else:
+        bot.send_photo(user_id, tmp.file_id)
+        bot.send_message(user_id, draw_text, reply_markup=keyboard.get_draw_keyboard(user_id))
     if tmp.file_type == 'document':
         bot.send_document(user_id, tmp.file_id, caption=draw_text, reply_markup=keyboard.get_draw_keyboard(user_id))
     else:
@@ -77,11 +77,11 @@ def my_draw_info(user_id, row=0):
         draw_text = f"{text['your_draw']}\n{text['post_time_text']} {all_draws[row].post_time}\n{text['over_time_text']} {all_draws[row].end_time}\n{text['chanel/chat']} {all_draws[row].chanel_name}\n{text['count_text']} {all_draws[row].winers_count}\n{text['text']} {all_draws[row].text}"
         keyboard = create_inlineKeyboard({text['back']: "back", text['next']: "next"}, 2)
         if all_draws[row].file_type == 'photo':
-            if len(draw_text) < 4000:
-                bot.send_photo(user_id, all_draws[row].file_id, draw_text, reply_markup=keyboard)
-            else:
-                bot.send_photo(user_id, all_draws[row].file_id)
-                bot.send_message(user_id, draw_text, reply_markup=keyboard)
+            # if len(draw_text) < 4000:
+            #     bot.send_photo(user_id, all_draws[row].file_id, draw_text, reply_markup=keyboard)
+            # else:
+            bot.send_photo(user_id, all_draws[row].file_id)
+            bot.send_message(user_id, draw_text, reply_markup=keyboard)
         elif all_draws[row].file_type == 'document':
             bot.send_document(user_id, all_draws[row].file_id, caption=draw_text, reply_markup=keyboard)
         else:
@@ -108,23 +108,23 @@ def start_draw_timer():
                     safed = False
                     for chanel_id in i.channels:
                         if i.file_type == 'photo':
-                            if len(i.text) < 4000:
-                                tmz = bot.send_photo(
-                                    chanel_id,
-                                    i.file_id,
-                                    i.text,
-                                    parse_mode='HTML', reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}),
-                                )
-                            else:
-                                tmz = bot.send_photo(
-                                    chanel_id,
-                                    i.file_id,
-                                )
-                                tmz = bot.send_message(
-                                    chanel_id,
-                                    i.text,
-                                    parse_mode='HTML', reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}),
-                                )
+                            # if len(i.text) < 4000:
+                            #     tmz = bot.send_photo(
+                            #         chanel_id,
+                            #         i.file_id,
+                            #         i.text,
+                            #         parse_mode='HTML', reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}),
+                            #     )
+                            # else:
+                            tmz = bot.send_photo(
+                                chanel_id,
+                                i.file_id,
+                            )
+                            tmz = bot.send_message(
+                                chanel_id,
+                                i.text,
+                                parse_mode='HTML', reply_markup=create_inlineKeyboard({language_check(i.user_id)[1]['draw']['get_on']:f'geton_{i.id}'}),
+                            )
                         elif i.file_type == 'document':
                             tmz = bot.send_document(
                                 chanel_id,
