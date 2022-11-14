@@ -524,15 +524,15 @@ def add_check_channel(message):
         middleware.send_draw_info(message.chat.id)
         return None
 
-    text = language_check(str(message.chat.id))[1]['draw']
-    try:
-        status = ['creator', 'administrator']
-        if str(bot.get_chat_member(chat_id=message.text, user_id=message.from_user.id).status) not in status:
-            bot.send_message(text['not_admin'])
-            return ''
-    except:
-        bot.send_message(message.chat.id, text['not_in_chanel'])
-        return ''
+    # text = language_check(str(message.chat.id))[1]['draw']
+    # try:
+    #     status = ['creator', 'administrator']
+    #     if str(bot.get_chat_member(chat_id=message.text, user_id=message.from_user.id).status) not in status:
+    #         bot.send_message(text['not_admin'])
+    #         return ''
+    # except:
+    #     bot.send_message(message.chat.id, text['not_in_chanel'])
+    #     return ''
     tmp = base.get_one(models.DrawProgress, user_id=str(message.chat.id))
     base.update(models.DrawProgress, {'channels': (tmp.channels or []) + [message.text]}, user_id=str(message.chat.id))
     base.new(models.SubscribeChannel, tmp.id, str(message.chat.id), message.text)
