@@ -1,10 +1,10 @@
+import os
 import telebot
-import config
 from base import DataBase
 from fsm import FSM
 
 
-bot = telebot.TeleBot(config.TOKEN)
+bot = telebot.TeleBot(os.getenv('TG_TOKEN'))
 fsm_base = DataBase()
 middleware_base = DataBase()
 main_base = DataBase()

@@ -2,11 +2,11 @@
   "menu": {
          "welcome_text": "👋Hi!\n The God of random will help you create a giveaway on the channel.\n Are you ready to create a new giveaway?",
          "menu_buttons": ["Create giveaway 🎁", "My giveaways 🎉", "Сменить язык 🇷🇺", "Support ⁉️", "Share with a friends 👥"],
-         "invite": "Share the bot with your friends by sending them the bot username \n @RandomGodBot",
+         "invite": "Share the bot with your friends by sending them the bot username",
          "support": "t.me/FeedbackRandomGodBot"
         },
   "draw": {
-         
+
          "back_in_menu": "Back in menu ↩️",
          "back": "Back ↩️",
          "draw_buttons": ["Change start time ⏳", "Change end time ⌛️", "Change number of winners 🏆", "Change discription 📑", "Change photo/gif 🖼", "Сheck subscription ✅", "Publish 🎲", "Back in menu ↩️"],
@@ -15,10 +15,10 @@
          "chanel_id_check": "Enter the username of the channel for verification in @username format.\n \n If the channel is private, then you need to send the id of this channel to find out the id of the private channel, forward any post from this channel to the special bot @getmyid_bot, the bottom line is the response from the bot and will be the id of your private channel.  Forward this id to the bot.\n Indicate the link to this channel in the description so that the participants of the giveaway know which channels you need to subscribe",
          "not_admin":"For publish the giveaway, you must be the administrator of this channel.  Send username as administrator",
          "not_in_chanel":"The bot is not the administrator of this channel.  Add bot to admins and submit @username again",
-         
+
          "draw_text":"Enter a description of the giveaway. \n Tip: describe what the prizes will be, how many winners there will be and what each of them will win, which channels the participants need to subscribe to, and indicate the date and time of the end of the giveaway.\n You can use the html markup.\n 1)Bold text - <b>your text</b>\n 2)Italic text - <i>your text</i>\n 3)Hyperlink to channel - <a href='your channel link'>your text</a>.\n Link must be in this format: https://t.me/channel",
          "file":"Send a picture or GIF (optional, if not needed, send any other message)",
-         
+
          "winers_count":"Enter the number of winners",
          "not_int": "This is not a number",
 
@@ -41,9 +41,9 @@
 
 
          "play":"Participate",
-         "not_subscribe": "@RandomGodBot: You haven't subscribed to all channels, please read the giveaway discription carefully and subscribe to all necessary channels to participate",
-         "already_in":"@RandomGodBot: You've already taken part",
-         "got_on":"@RandomGodBot: Congratulations, you entered the giveaway!",
+         "not_subscribe": "You haven't subscribed to all channels, please read the giveaway discription carefully and subscribe to all necessary channels to participate",
+         "already_in":"You've already taken part",
+         "got_on":"Congratulations, you entered the giveaway!",
 
          "winers":"The giveaway has ended.\n Winners:",
          "no_winers":"No winners",
@@ -67,3 +67,4 @@
            "back":"Back"
 
         }
+}

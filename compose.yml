@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:14.5
+    ports:
+      - 5432:5432
+    restart: always
+    env_file: .env
+    volumes:
+      - ${DATA_PATH}/db:/data/db
+      - ${DATA_PATH}/logs:/data/logs
+
+  tg:
+    image: python:3.10
+    env_file: .env
+    depends_on:
+      - db
+    restart: always
+    volumes:
+      - ./app:/app
+    entrypoint: bash -c "cd app && pip install -r requirements.txt && python main.py"
